@@ -1,4 +1,4 @@
-package com.boris.todolist.entity;
+package com.boris.todolist.model.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @ToString
-public class ToDo {
+public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -24,4 +24,10 @@ public class ToDo {
 
     @Column
     Integer status;
+
+    @Column
+    String createTime;
+
+    @Column
+    String updateTime;
 }
