@@ -19,6 +19,37 @@ public class TodoService {
         return todoDao.findAll();
     }
 
+    public Todo updateTodo(Integer id, Todo todo) {
+        try {
+            Todo resultTodo = findById(id);
+            Integer status = todo.getStatus();
+            resultTodo.setStatus(status);
+            return todoDao.save(resultTodo);
+        } catch (Exception exception) {
+            return null;
+        }
+    }
+
+    //check the id exist or not
+    public Todo findById(Integer id) {
+        Todo todo = todoDao.findById(id).get();
+        return todo;
+    }
+
+    
+    public Boolean deleteTodo(Integer id) {
+        try {
+            Todo resultTodo = findById(id);
+            todoDao.deleteById(id);
+            return true;
+        } catch (Exception exception) {
+            return false;
+        }
+
+
+    }
+
+
     public Iterable<Todo> createTodo(Todo todo) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         df.setTimeZone(TimeZone.getTimeZone("GMT"));

@@ -1,19 +1,17 @@
 package com.boris.todolist.model.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
 
 @Entity
-@Table
+@Table //mapping table name
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
+@Data
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
