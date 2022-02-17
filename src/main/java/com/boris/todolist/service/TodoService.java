@@ -15,7 +15,8 @@ public class TodoService {
     @Autowired
     TodoDao todoDao;
 
-    public Iterable<Todo> getTodo() {
+    //Get all to do items
+    public Iterable<Todo> getTodos() {
         return todoDao.findAll();
     }
 
@@ -36,7 +37,7 @@ public class TodoService {
         return todo;
     }
 
-    
+
     public Boolean deleteTodo(Integer id) {
         try {
             Todo resultTodo = findById(id);
@@ -57,6 +58,6 @@ public class TodoService {
         todo.setCreateTime(date);
         todo.setUpdateTime(date);
         todoDao.save(todo);
-        return getTodo();
+        return getTodos();
     }
 }
