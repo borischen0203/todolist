@@ -3,43 +3,53 @@ package com.boris.todolist.controller;
 import com.boris.todolist.model.entity.Todo;
 import com.boris.todolist.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api") //father path ex: /api/todos
 public class TodoController {
     @Autowired
     TodoService todoService;
 
     @GetMapping("/todos")
-    public String getTodos(Model model) {
+    public ResponseEntity getTodos() {
         Iterable<Todo> todoList = todoService.getTodos();
-        model.addAttribute("todolist", todoList);
-        Todo todo = new Todo();
-        model.addAttribute("todoObject", todo);
-        return "todolist"; //return to todolist.html
+        return ResponseEntity.status(HttpStatus.OK).body(todoList);
+    }
+
+    @GetMapping("/todos/{id}")
+    public Optional<Todo> getTodo(@PathVariable Integer id) {
+        Optional<Todo> todo = todoService.findById(id);
+        return todo;
     }
 
     @PostMapping("/todos")
-    public String createTodo(@ModelAttribute Todo todo, Model model) {
-        Iterable<Todo> allTodoList = todoService.createTodo(todo);
-        Todo emptyTodo = new Todo();
-        model.addAttribute("todolist", allTodoList);
-        model.addAttribute("todoObject", emptyTodo);
-        return "redirect:/todos";//redirect to GET /todos
+    public ResponseEntity createTodo(@RequestBody Todo todo) {
+        Integer result = todoService.createTodo(todo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    @ResponseBody
+
     @PutMapping("/todos/{id}")
-    public void upadteTodo(@PathVariable Integer id, @RequestBody Todo todo) {
-        todoService.updateTodo(id, todo);
+    public ResponseEntity upadteTodo(@PathVariable Integer id, @RequestBody Todo todo) {
+        Boolean result = todoService.updateTodo(id, todo);
+        if (!result) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Status can not be empty");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("");
     }
 
-    @ResponseBody
     @DeleteMapping("/todos/{id}")
-    public void deleteTodo(@PathVariable Integer id) {
-        todoService.deleteTodo(id);
+    public ResponseEntity deleteTodo(@PathVariable Integer id) {
+        Boolean result = todoService.deleteTodo(id);
+        if (!result) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id not exist");
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
 
 }

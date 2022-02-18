@@ -6,9 +6,7 @@ import com.boris.todolist.model.entity.Todo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import java.util.Optional;
 
 @Service
 public class TodoService {
@@ -20,44 +18,42 @@ public class TodoService {
         return todoDao.findAll();
     }
 
-    public Todo updateTodo(Integer id, Todo todo) {
-        try {
-            Todo resultTodo = findById(id);
-            Integer status = todo.getStatus();
-            resultTodo.setStatus(status);
-            return todoDao.save(resultTodo);
-        } catch (Exception exception) {
-            return null;
+    public Integer createTodo(Todo todo) {
+        Todo resultTodo = todoDao.save(todo);
+        return resultTodo.getId();
+    }
+
+    public Boolean updateTodo(Integer id, Todo todo) {
+        Optional<Todo> isExistTodo = findById(id);
+
+        //check exist
+        if (!isExistTodo.isPresent()) {
+            return false;
         }
+
+        //check to_do request is not null
+        if (todo.getStatus() == null) {
+            return false;
+        }
+        Todo newTodo = isExistTodo.get();
+        newTodo.setStatus(todo.getStatus());// updatae status from To_Do request
+        todoDao.save(newTodo);// save update to_do to DB
+        return true;
     }
 
     //check the id exist or not
-    public Todo findById(Integer id) {
-        Todo todo = todoDao.findById(id).get();
+    public Optional<Todo> findById(Integer id) {
+        Optional<Todo> todo = todoDao.findById(id);
         return todo;
     }
 
 
     public Boolean deleteTodo(Integer id) {
-        try {
-            Todo resultTodo = findById(id);
-            todoDao.deleteById(id);
-            return true;
-        } catch (Exception exception) {
+        Optional<Todo> isExistTodo = findById(id);
+        if (!isExistTodo.isPresent()) {
             return false;
         }
-
-
-    }
-
-
-    public Iterable<Todo> createTodo(Todo todo) {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        df.setTimeZone(TimeZone.getTimeZone("GMT"));
-        String date = df.format(new Date());
-        todo.setCreateTime(date);
-        todo.setUpdateTime(date);
-        todoDao.save(todo);
-        return getTodos();
+        todoDao.deleteById(id);
+        return true;
     }
 }
