@@ -37,8 +37,12 @@ public class TodoService {
         }
         Todo newTodo = isExistTodo.get();
         newTodo.setStatus(todo.getStatus());// updatae status from To_Do request
-        todoDao.save(newTodo);// save update to_do to DB
-        return true;
+        try {
+            todoDao.save(newTodo);// save update to_do to DB
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     //check the id exist or not
@@ -53,7 +57,11 @@ public class TodoService {
         if (!isExistTodo.isPresent()) {
             return false;
         }
-        todoDao.deleteById(id);
-        return true;
+        try {
+            todoDao.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
