@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+//@Api(tags = "Todo list api")
 @RestController
 @RequestMapping("/api") //father path ex: /api/todos
 public class TodoController {
@@ -25,6 +26,10 @@ public class TodoController {
         return ResponseEntity.status(HttpStatus.OK).body("ok");
     }
 
+    //    @ApiOperation("Get all todo lists")
+//    @ApiResponses({
+//            @ApiResponse(code = 400, message = "Bad request"),
+//    })
     @GetMapping("/todos")
     public ResponseEntity getTodos() {
         Iterable<Todo> todoList = todoService.getTodos();
@@ -41,7 +46,8 @@ public class TodoController {
     public ResponseEntity createTodo(@RequestBody Todo todo) {
         logger.info("[createTodo controler] request:", todo);
         Optional<Todo> result = todoService.createTodoService(todo);
-//        String res = "{\"id\":" + result + "}";
+//        Integer result = todoService.createTodoService2(todo);
+//        String res = "{\"id\":" + result + "}"
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
