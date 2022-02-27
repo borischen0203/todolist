@@ -2,6 +2,8 @@ package com.boris.todolist.controller;
 
 import com.boris.todolist.model.entity.Todo;
 import com.boris.todolist.service.TodoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +14,16 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api") //father path ex: /api/todos
 public class TodoController {
+    private static final Logger logger = LoggerFactory.getLogger(TodoController.class);
+
     @Autowired
     TodoService todoService;
+
+    @GetMapping("/health")
+    public ResponseEntity health() {
+        logger.info("Server health check");
+        return ResponseEntity.status(HttpStatus.OK).body("ok");
+    }
 
     @GetMapping("/todos")
     public ResponseEntity getTodos() {
@@ -29,14 +39,16 @@ public class TodoController {
 
     @PostMapping("/todos")
     public ResponseEntity createTodo(@RequestBody Todo todo) {
-        Integer result = todoService.createTodo(todo);
+        logger.info("[createTodo controler] request:", todo);
+        Optional<Todo> result = todoService.createTodoService(todo);
+//        String res = "{\"id\":" + result + "}";
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
 
     @PutMapping("/todos/{id}")
     public ResponseEntity upadteTodo(@PathVariable Integer id, @RequestBody Todo todo) {
-        Boolean result = todoService.updateTodo(id, todo);
+        Boolean result = todoService.updateTodoService(id, todo);
         if (!result) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Status can not be empty");
         }
@@ -45,7 +57,7 @@ public class TodoController {
 
     @DeleteMapping("/todos/{id}")
     public ResponseEntity deleteTodo(@PathVariable Integer id) {
-        Boolean result = todoService.deleteTodo(id);
+        Boolean result = todoService.deleteTodoService(id);
         if (!result) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id not exist");
         }

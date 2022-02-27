@@ -27,40 +27,32 @@ public class TestTodoService {
 
     @Test
     public void testGetTodos() {
-        //3A: arrange, act, assert
-        // [Arrange]
-        List<Todo> expectedTodosList = new ArrayList();
+        List<Todo> expectedTodosList = new ArrayList<>();
         Todo todo = new Todo();
         todo.setId(1);
         todo.setTask("Washing");
         todo.setStatus(1);
         expectedTodosList.add(todo);
 
-        // mock todoDao.finAll function result
         Mockito.when(todoDao.findAll()).thenReturn(expectedTodosList);
 
-        // [Act]Operate todoService.getTodos();
         Iterable<Todo> actual = todoService.getTodos();
 
-        // [Assert]
         assertEquals(expectedTodosList, actual);
-
     }
 
     @Test
     public void testCreateTodo() {
-        // [Arrange]
         Todo todo = new Todo();
         todo.setId(1);
         todo.setTask("Write");
         todo.setStatus(1);
+        Optional<Todo> expected = Optional.of(todo);
 
         Mockito.when(todoDao.save(todo)).thenReturn(todo);
 
-        // [Act]
-        Integer actual = todoService.createTodo(todo);
-        Integer expected = todo.getId();
-        //  [Assert]
+        Optional<Todo> actual = todoService.createTodoService(todo);
+
         assertEquals(expected, actual);
     }
 
@@ -74,53 +66,38 @@ public class TestTodoService {
 
         Mockito.when(todoDao.findById(1)).thenReturn(resultTodo);
 
-        // [Arrange]
-        todo.setStatus(2);
+        Boolean actual = todoService.updateTodoService(1, todo);
 
-        // [Act]
-        Boolean actualUpdateRlt = todoService.updateTodo(1, todo);
-
-        //  [Assert]
-        assertEquals(true, actualUpdateRlt);
+        assertEquals(true, actual);
     }
 
     @Test
     public void testUpdateTodoNotExistId() {
-        // Request body
         Todo todo = new Todo();
         todo.setId(1);
         todo.setTask("Write");
         todo.setStatus(2);
-        Optional<Todo> resultTodo = Optional.of(todo);
 
-        // Mock id not found
         Mockito.when(todoDao.findById(1)).thenReturn(Optional.empty());
 
-        // [Act]
-        Boolean actualUpdateRlt = todoService.updateTodo(1, todo);
+        Boolean actual = todoService.updateTodoService(1, todo);
 
-        // [Assert]
-        assertEquals(false, actualUpdateRlt);
+        assertEquals(false, actual);
     }
 
     @Test
-    public void testUpdateTodoOccurException() {
+    public void testUpdateTodoException() {
         Todo todo = new Todo();
         todo.setId(1);
         todo.setStatus(1);
         Optional<Todo> resultTodo = Optional.of(todo);
 
         Mockito.when(todoDao.findById(1)).thenReturn(resultTodo);
-        todo.setStatus(2);
-
-        // Mock NullPointerException
         doThrow(NullPointerException.class).when(todoDao).save(todo);
 
-        // [Act]
-        Boolean actualUpdateRlt = todoService.updateTodo(100, todo);
+        Boolean actual = todoService.updateTodoService(100, todo);
 
-        //  [Assert]
-        assertEquals(false, actualUpdateRlt);
+        assertEquals(false, actual);
     }
 
     @Test
@@ -133,11 +110,9 @@ public class TestTodoService {
 
         Mockito.when(todoDao.findById(1)).thenReturn(resultTodo);
 
-        // [Act]
-        Boolean actualDeleteRlt = todoService.deleteTodo(1);
+        Boolean actual = todoService.deleteTodoService(1);
 
-        //  [Assert]
-        assertEquals(true, actualDeleteRlt);
+        assertEquals(true, actual);
     }
 
     @Test
@@ -146,35 +121,28 @@ public class TestTodoService {
         todo.setId(1);
         todo.setTask("Write");
         todo.setStatus(2);
-        Optional<Todo> resultTodo = Optional.of(todo);
 
         Mockito.when(todoDao.findById(100)).thenReturn(Optional.empty());
 
-        // [Act]
-        Boolean actualDeleteRlt = todoService.deleteTodo(1);
+        Boolean actual = todoService.deleteTodoService(1);
 
-        //  [Assert]
-        assertEquals(false, actualDeleteRlt);
+        assertEquals(false, actual);
     }
 
     @Test
-    public void testDeleteTodoOccurException() {
+    public void testDeleteTodoException() {
         Todo todo = new Todo();
         todo.setId(1);
         todo.setStatus(1);
         Optional<Todo> resultTodo = Optional.of(todo);
 
         Mockito.when(todoDao.findById(1)).thenReturn(resultTodo);
-        todo.setStatus(2);
 
-        // Mock NullPointerException
         doThrow(NullPointerException.class).when(todoDao).save(todo);
 
-        // [Act]
-        Boolean actualUpdateRlt = todoService.updateTodo(100, todo);
+        Boolean actual = todoService.updateTodoService(100, todo);
 
-        //  [Assert]
-        assertEquals(false, actualUpdateRlt);
+        assertEquals(false, actual);
     }
 
 }

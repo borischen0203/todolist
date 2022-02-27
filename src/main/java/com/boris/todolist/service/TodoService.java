@@ -1,8 +1,11 @@
 package com.boris.todolist.service;
 
 
+import com.boris.todolist.controller.TodoController;
 import com.boris.todolist.model.dao.TodoDao;
 import com.boris.todolist.model.entity.Todo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +13,8 @@ import java.util.Optional;
 
 @Service
 public class TodoService {
+    private static final Logger logger = LoggerFactory.getLogger(TodoController.class);
+
     @Autowired
     TodoDao todoDao;
 
@@ -18,12 +23,13 @@ public class TodoService {
         return todoDao.findAll();
     }
 
-    public Integer createTodo(Todo todo) {
+    public Optional<Todo> createTodoService(Todo todo) {
         Todo resultTodo = todoDao.save(todo);
-        return resultTodo.getId();
+        logger.info("[createTodo service] request:", resultTodo);
+        return Optional.of(resultTodo);
     }
 
-    public Boolean updateTodo(Integer id, Todo todo) {
+    public Boolean updateTodoService(Integer id, Todo todo) {
         Optional<Todo> isExistTodo = findById(id);
 
         //check exist
@@ -51,8 +57,7 @@ public class TodoService {
         return todo;
     }
 
-
-    public Boolean deleteTodo(Integer id) {
+    public Boolean deleteTodoService(Integer id) {
         Optional<Todo> isExistTodo = findById(id);
         if (!isExistTodo.isPresent()) {
             return false;
