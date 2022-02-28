@@ -54,6 +54,7 @@ curl -X DELETE hhttp://localhost:9100/api/todos/1
 ## Tech Stack
 
 - Java
+- Maven
 - Spring Boot framework
 - RESTful API
 - H2 database
