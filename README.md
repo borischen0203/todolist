@@ -32,7 +32,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"task" : "cook", "status":
 - `GET`  /api/todos
 
 ```bash
-curl -X GET localhost:9100/api/todos
+curl -X GET http://localhost:9100/api/todos
 ```
 
 ### Update the todo item status
@@ -40,7 +40,7 @@ curl -X GET localhost:9100/api/todos
 - `PUT` /api/todos/{id}
 
 ```bash
-curl -X PUT -H "Content-Type: application/json" -d '{"task" : "cook", "status":1}' hhttp://localhost:9100/api/todos/1
+curl -X PUT -H "Content-Type: application/json" -d '{"task" : "cook", "status":1}' http://localhost:9100/api/todos/1
 ```
 
 ### Delete todo item from list
@@ -48,7 +48,7 @@ curl -X PUT -H "Content-Type: application/json" -d '{"task" : "cook", "status":1
 - `DELETE` /api/todos/{id}
 
 ```bash
-curl -X DELETE hhttp://localhost:9100/api/todos/1
+curl -X DELETE http://localhost:9100/api/todos/1
 ```
 
 ## Tech Stack
