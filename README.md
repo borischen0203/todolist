@@ -64,7 +64,6 @@ curl -X DELETE http://localhost:9100/api/todos/1
 - Makefile
 
 ## Todo:
-
 - [ ] Swagger API document
 - [ ] Logging lib issue fix
 - [ ] Integration test
